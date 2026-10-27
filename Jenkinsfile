@@ -87,7 +87,7 @@ pipeline {
                     docker run -d --name pz-ci-db-${BUILD_NUMBER} --network $NET --network-alias postgres \
                         -e POSTGRES_DB=ci_db -e POSTGRES_USER="$DB_CREDS_USR" -e POSTGRES_PASSWORD="$DB_CREDS_PSW" \
                         postgres:17-alpine
-                    until docker exec pz-ci-db-${BUILD_NUMBER} pg_isready -U "$DB_CREDS_USR" -d ci_db; do sleep 2; done
+                    until docker exec pz-ci-db-${BUILD_NUMBER} pg_isready -h 127.0.0.1 -U "$DB_CREDS_USR" -d ci_db; do sleep 2; done
                     docker run -d --name pz-ci-app-${BUILD_NUMBER} --network $NET \
                         -e SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/ci_db \
                         -e SPRING_DATASOURCE_USERNAME="$DB_CREDS_USR" -e SPRING_DATASOURCE_PASSWORD="$DB_CREDS_PSW" \
