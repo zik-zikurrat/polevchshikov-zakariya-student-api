@@ -2,18 +2,20 @@ package com.polevchshikov.studentapi.controller;
 
 import java.util.List;
 
+import com.polevchshikov.studentapi.exception.StudentNotFoundException;
 import com.polevchshikov.studentapi.model.Student;
 import com.polevchshikov.studentapi.repository.StudentRepository;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/students")
@@ -33,12 +35,23 @@ public class StudentController {
 	@GetMapping("/{id}")
 	public Student findById(@PathVariable Long id) {
 		return repository.findById(id)
-			.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Student with id " + id + " not found"));
+			.orElseThrow(() -> new StudentNotFoundException(id));
 	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Student create(@RequestBody Student student) {
+	public Student create(@Valid @RequestBody Student student) {
+		return repository.save(student);
+	}
+
+	@PutMapping("/{id}")
+	public Student update(@PathVariable Long id, @Valid @RequestBody Student changes) {
+		Student student = repository.findById(id)
+			.orElseThrow(() -> new StudentNotFoundException(id));
+		student.setFirstName(changes.getFirstName());
+		student.setLastName(changes.getLastName());
+		student.setEmail(changes.getEmail());
+		student.setGroupName(changes.getGroupName());
 		return repository.save(student);
 	}
 
@@ -46,7 +59,7 @@ public class StudentController {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void delete(@PathVariable Long id) {
 		if (!repository.existsById(id)) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Student with id " + id + " not found");
+			throw new StudentNotFoundException(id);
 		}
 		repository.deleteById(id);
 	}

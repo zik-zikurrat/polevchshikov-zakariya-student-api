@@ -13,6 +13,7 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -52,6 +53,27 @@ class StudentControllerTest {
 	}
 
 	@Test
+	void updateStudent() throws Exception {
+		long id = createStudent();
+		mockMvc.perform(put("/api/students/{id}", id)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content("""
+						{"firstName":"Zakariya","lastName":"Polevchshikov",
+						 "email":"zakariya.updated@student.example","groupName":"IT2-2312"}
+						"""))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.email").value("zakariya.updated@student.example"));
+	}
+
+	@Test
+	void updateNonexistentStudentReturns404() throws Exception {
+		mockMvc.perform(put("/api/students/{id}", 999999)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(STUDENT_JSON))
+			.andExpect(status().isNotFound());
+	}
+
+	@Test
 	void deleteStudent() throws Exception {
 		long id = createStudent();
 		mockMvc.perform(delete("/api/students/{id}", id)).andExpect(status().isNoContent());
@@ -60,7 +82,21 @@ class StudentControllerTest {
 
 	@Test
 	void nonexistentStudentReturns404() throws Exception {
-		mockMvc.perform(get("/api/students/{id}", 999999)).andExpect(status().isNotFound());
+		mockMvc.perform(get("/api/students/{id}", 999999))
+			.andExpect(status().isNotFound())
+			.andExpect(jsonPath("$.message").value("Student with id 999999 not found"));
+	}
+
+	@Test
+	void invalidStudentReturns400() throws Exception {
+		mockMvc.perform(post("/api/students")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content("""
+						{"firstName":"","lastName":"Polevchshikov","email":"not-an-email"}
+						"""))
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.fields.firstName").value("First name is required"))
+			.andExpect(jsonPath("$.fields.email").value("Email must be valid"));
 	}
 
 	private long createStudent() throws Exception {
