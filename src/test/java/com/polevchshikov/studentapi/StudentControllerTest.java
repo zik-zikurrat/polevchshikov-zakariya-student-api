@@ -34,7 +34,7 @@ class StudentControllerTest {
 	void rootShowsStudentName() throws Exception {
 		mockMvc.perform(get("/"))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.student").value("Asan Abai"));
+			.andExpect(jsonPath("$.student").value("Polevchshikov Zakariya"));
 	}
 
 	@Test
