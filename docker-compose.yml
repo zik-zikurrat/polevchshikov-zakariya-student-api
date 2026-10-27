@@ -1,0 +1,48 @@
+# Personalized Compose project: containers, network and volume carry the student's name
+name: polevchshikov-zakariya-student-api
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: polevchshikov-zakariya-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:?set POSTGRES_DB in .env}
+      POSTGRES_USER: ${POSTGRES_USER:?set POSTGRES_USER in .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+    volumes:
+      - polevchshikov-zakariya-pgdata:/var/lib/postgresql/data
+    networks:
+      - polevchshikov-zakariya-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+    restart: unless-stopped
+
+  app:
+    build: .
+    image: polevchshikov-zakariya-student-api:${APP_TAG:-v1.0-polevchshikov-zakariya}
+    container_name: polevchshikov-zakariya-app
+    environment:
+      # "postgres" is the service name: Docker DNS resolves it inside the network
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "8082:8080"   # host 8082 (8080 is used by Jenkins) -> container 8080
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - polevchshikov-zakariya-net
+    restart: unless-stopped
+
+volumes:
+  polevchshikov-zakariya-pgdata:
+    name: polevchshikov-zakariya-pgdata
+
+networks:
+  polevchshikov-zakariya-net:
+    name: polevchshikov-zakariya-net
