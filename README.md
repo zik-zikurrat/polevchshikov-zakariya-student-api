@@ -60,6 +60,21 @@ docker compose down         # data stays in the polevchshikov-zakariya-pgdata vo
 Job `Polevchshikov_Zakariya_Student_API` runs the `Jenkinsfile`:
 Checkout → Build → Test → Docker Build → Verify.
 
+- **Trigger:** `pollSCM('* * * * *')` — Jenkins checks GitHub every minute and starts a build after a new commit on `main`.
+- **Parameter `BRANCH`** (default `main`): *Build with Parameters* → `test/polevchshikov-zakariya-failure`
+  builds the test branch used for the failure demo.
+- **Credentials:** the database password for the smoke test is stored in Jenkins Credentials
+  (`polevchshikov-zakariya-db`) and is masked as `****` in the console output.
+
+## API tests with Postman
+
+Import `postman/Polevchshikov_Zakariya_Student_API.postman_collection.json` into Postman and run the folder,
+or from the terminal:
+
+```bash
+npx newman run postman/Polevchshikov_Zakariya_Student_API.postman_collection.json
+```
+
 ## Run tests locally
 
 ```bash
