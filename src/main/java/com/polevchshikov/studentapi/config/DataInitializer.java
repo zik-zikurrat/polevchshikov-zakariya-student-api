@@ -28,7 +28,7 @@ public class DataInitializer implements CommandLineRunner {
 			return;
 		}
 		repository.save(new Student("Zakariya", "Polevchshikov", "zakariya.polevchshikov@student.example", "IT2-2312"));
-		repository.save(new Student("Abai", "Asan", "abai.asan@student.example", "IT2-2312"));
+		repository.save(new Student("Demo", "Student-37052", "demo.37052@student.example", "IT2-2312"));
 		log.info("Inserted test data for Polevchshikov Zakariya (IT2-2312)");
 	}
 
