@@ -15,6 +15,7 @@ RUN ./gradlew --no-daemon bootJar -x test
 # ============ Stage 2: small runtime image (JRE only) ============
 FROM eclipse-temurin:21-jre
 LABEL org.opencontainers.image.title="polevchshikov-zakariya-student-api" \
+      org.opencontainers.image.description="Spring Boot Student CRUD API - DevOps midterm of Polevchshikov Zakariya" \
       org.opencontainers.image.authors="Polevchshikov Zakariya (IT2-2312, 37052)"
 WORKDIR /app
 
