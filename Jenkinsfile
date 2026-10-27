@@ -13,6 +13,8 @@ pipeline {
     }
 
     options {
+        // Code is checked out once, in the explicit Checkout stage
+        skipDefaultCheckout()
         disableConcurrentBuilds()
         buildDiscarder(logRotator(numToKeepStr: '30'))
     }
