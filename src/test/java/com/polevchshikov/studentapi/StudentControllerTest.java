@@ -13,6 +13,7 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -49,6 +50,27 @@ class StudentControllerTest {
 		mockMvc.perform(get("/api/students"))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$[*].lastName", hasItem("Polevchshikov")));
+	}
+
+	@Test
+	void updateStudent() throws Exception {
+		long id = createStudent();
+		mockMvc.perform(put("/api/students/{id}", id)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content("""
+						{"firstName":"Zakariya","lastName":"Polevchshikov",
+						 "email":"zakariya.updated@student.example","groupName":"IT2-2312"}
+						"""))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.email").value("zakariya.updated@student.example"));
+	}
+
+	@Test
+	void updateNonexistentStudentReturns404() throws Exception {
+		mockMvc.perform(put("/api/students/{id}", 999999)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(STUDENT_JSON))
+			.andExpect(status().isNotFound());
 	}
 
 	@Test
