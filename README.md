@@ -35,7 +35,16 @@ Base URL: `http://localhost:8082/polevchshikov-zakariya`
 | GET | `/api/students` | List all students |
 | GET | `/api/students/{id}` | Get one student |
 | POST | `/api/students` | Create a student |
+| PUT | `/api/students/{id}` | Update a student |
 | DELETE | `/api/students/{id}` | Delete a student |
+
+## Changes by Polevchshikov Zakariya (feature/polevchshikov-zakariya-crud)
+
+- **Update operation:** new `PUT /api/students/{id}` endpoint changes a student's name, email and group.
+- **Validation:** `firstName`, `lastName` and `email` are required, `email` must be a valid address;
+  invalid requests return `400 Bad Request` with the list of wrong fields.
+- **Nonexistent student:** `GET/PUT/DELETE` for an unknown id return `404 Not Found` with a JSON message,
+  e.g. `{"status":404,"message":"Student with id 999 not found"}`.
 
 ## Run tests locally
 
