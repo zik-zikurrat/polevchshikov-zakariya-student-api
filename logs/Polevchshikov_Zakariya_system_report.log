@@ -1,0 +1,29 @@
+==============================================
+ System Report
+==============================================
+Student:          Polevchshikov Zakariya
+Date and time:    2026-10-27 11:35:57 +05
+Username:         zakariyapolevchishikov
+Hostname:         MacBook-Pro.local
+Operating system: Darwin
+Kernel version:   27.0.0
+
+---- CPU ----
+Model: Apple M5
+Cores: 10
+
+---- Memory ----
+Total: 32 GB
+Mach Virtual Memory Statistics: (page size of 16384 bytes)
+Pages free:                                     7888.
+Pages active:                                 493736.
+Pages inactive:                               490867.
+Pages speculative:                              1818.
+
+---- Disk usage ----
+Filesystem        Size    Used   Avail Capacity iused ifree %iused  Mounted on
+/dev/disk3s1s1   926Gi    13Gi   535Gi     3%    484k  4.3G    0%   /
+
+Available disk space on /: 535Gi
+==============================================
+
