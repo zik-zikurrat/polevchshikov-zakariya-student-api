@@ -4,7 +4,7 @@ Spring Boot CRUD application for managing students, built for the DevOps midterm
 
 **Author:** Polevchshikov Zakariya · Group IT2-2312 · Student ID 37052
 
-**Status:** initial version of the Student API.
+**Status:** documented by Polevchshikov Zakariya: how to run the API with Docker Compose and Jenkins.
 
 ## Technologies
 
@@ -45,6 +45,20 @@ Base URL: `http://localhost:8082/polevchshikov-zakariya`
   invalid requests return `400 Bad Request` with the list of wrong fields.
 - **Nonexistent student:** `GET/PUT/DELETE` for an unknown id return `404 Not Found` with a JSON message,
   e.g. `{"status":404,"message":"Student with id 999 not found"}`.
+
+## Run with Docker Compose
+
+```bash
+cp .env.example .env        # then set a real POSTGRES_PASSWORD
+docker compose up -d --build
+curl http://localhost:8082/polevchshikov-zakariya/api/students
+docker compose down         # data stays in the polevchshikov-zakariya-pgdata volume
+```
+
+## Jenkins
+
+Job `Polevchshikov_Zakariya_Student_API` runs the `Jenkinsfile`:
+Checkout → Build → Test → Docker Build → Verify.
 
 ## Run tests locally
 
