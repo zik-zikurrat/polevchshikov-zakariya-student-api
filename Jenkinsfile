@@ -30,7 +30,12 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                // The job polls main; the BRANCH parameter (default main) lets us build
+                // another branch, e.g. test/polevchshikov-zakariya-failure for the failure demo
+                checkout scmGit(
+                    branches: [[name: "*/${params.BRANCH ?: 'main'}"]],
+                    userRemoteConfigs: [[url: 'https://github.com/zik-zikurrat/polevchshikov-zakariya-student-api.git']])
+                echo "Branch: ${params.BRANCH ?: 'main'}"
                 echo "Student: ${STUDENT_NAME} (group ${STUDENT_GROUP}, ID ${STUDENT_ID})"
                 sh 'git log -1 --pretty=format:"Commit: %h %s (%an)%n"'
                 script {
