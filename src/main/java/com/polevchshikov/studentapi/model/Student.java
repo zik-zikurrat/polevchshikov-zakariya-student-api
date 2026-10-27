@@ -7,6 +7,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "students")
@@ -17,12 +19,16 @@ public class Student {
 	@JsonProperty(access = JsonProperty.Access.READ_ONLY)
 	private Long id;
 
+	@NotBlank(message = "First name is required")
 	@Column(nullable = false)
 	private String firstName;
 
+	@NotBlank(message = "Last name is required")
 	@Column(nullable = false)
 	private String lastName;
 
+	@NotBlank(message = "Email is required")
+	@Email(message = "Email must be valid")
 	@Column(nullable = false)
 	private String email;
 

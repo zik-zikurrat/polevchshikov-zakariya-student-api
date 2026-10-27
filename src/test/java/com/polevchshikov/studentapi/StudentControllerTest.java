@@ -82,7 +82,21 @@ class StudentControllerTest {
 
 	@Test
 	void nonexistentStudentReturns404() throws Exception {
-		mockMvc.perform(get("/api/students/{id}", 999999)).andExpect(status().isNotFound());
+		mockMvc.perform(get("/api/students/{id}", 999999))
+			.andExpect(status().isNotFound())
+			.andExpect(jsonPath("$.message").value("Student with id 999999 not found"));
+	}
+
+	@Test
+	void invalidStudentReturns400() throws Exception {
+		mockMvc.perform(post("/api/students")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content("""
+						{"firstName":"","lastName":"Polevchshikov","email":"not-an-email"}
+						"""))
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.fields.firstName").value("First name is required"))
+			.andExpect(jsonPath("$.fields.email").value("Email must be valid"));
 	}
 
 	private long createStudent() throws Exception {
