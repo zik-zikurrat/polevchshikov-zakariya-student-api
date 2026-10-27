@@ -4,7 +4,7 @@ Spring Boot CRUD application for managing students, built for the DevOps midterm
 
 **Author:** Polevchshikov Zakariya · Group IT2-2312 · Student ID 37052
 
-**Status:** initial version of the Student API.
+**Status:** v1.0 - CRUD API containerized with Docker and built by Jenkins.
 
 ## Technologies
 
